@@ -143,10 +143,14 @@ $(TARGETS): %: %.o
 
 # COMPILE.c=$(cc)  $(CFLAGS)  $(CPPFLAGS)  -C
 # $< 依赖目标中的第一个目标名字
-# $@ 表示目标
+# $@ 表示目标集
 # $^ 所有的依赖目标的集合
 # 在$(patsubst %.o,%,$@ )中，patsubst把目标中的变量符合后缀是.o的全部删除
+# $(TARGETS): %: %.O 指明我们的目标从$(TARGETS)中获取，“%”表明要以所有文件为目标，也就是$(TARGETS)集合的模式，而依赖模式%.O则取“%”，并为其加“.c”后缀
 # LINK.o把.o文件链接在一起的命令行，缺省值是$(CC)
+
+
+
 
 #以ping为例，翻译为：
 # gcc -O3 -fno-strict-aliasing -Wstrict-prototypes -Wall -g -D_GNU_SOURCE    -c ping.c -DCAPABILITIES   -o ping.o
@@ -253,6 +257,7 @@ distclean: clean
 		fi
 
 # -------------------------------------
+# 快照
 snapshot:
 	@if [ x"$(UNAME_N)" != x"pleiades" ]; then echo "Not authorized to advance snapshot"; exit 1; fi
 	@echo "[$(TAG)]" > RELNOTES.NEW
