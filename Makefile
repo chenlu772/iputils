@@ -133,11 +133,14 @@ TAG:=$(shell date --date=$(TODAY) +s%Y%m%d)
 .PHONY: all ninfod clean distclean man html check-kernel modules snapshot
 
 all: $(TARGETS)
+# all 这个伪目标是所有目标的目标，其功能是编译所有目标
 
 %.s: %.c
 	$(COMPILE.c) $< $(DEF_$(patsubst %.o,%,$@)) -S -o $@
+
 %.o: %.c
 	$(COMPILE.c) $< $(DEF_$(patsubst %.o,%,$@)) -o $@
+
 $(TARGETS): %: %.o
 	$(LINK.o) $^ $(LIB_$@) $(LDLIBS) -o $@
 
@@ -146,6 +149,7 @@ $(TARGETS): %: %.o
 # $@ 表示目标集
 # $^ 所有的依赖目标的集合
 # 在$(patsubst %.o,%,$@ )中，patsubst把目标中的变量符合后缀是.o的全部删除
+# patsubst 是模式字符串替换函数，patsubst %.o,%,$@ )的意思是：查找$@中的单词(单词以“空格”、“Tab”或“回车”“换行”分隔)是否符合模式“%.o”，如果匹配的话,则以“%”替换
 # $(TARGETS): %: %.O 指明我们的目标从$(TARGETS)中获取，“%”表明要以所有文件为目标，也就是$(TARGETS)集合的模式，而依赖模式%.O则取“%”，并为其加“.c”后缀
 # LINK.o把.o文件链接在一起的命令行，缺省值是$(CC)
 
