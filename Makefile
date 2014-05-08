@@ -7,7 +7,7 @@
 CC=gcc
 
 # Path to parent kernel include files directory
-# 核心路径包括文件途径
+# 核心路径包括文件目录
 LIBC_INCLUDE=/usr/include
 # Libraries
 ADDLIB=
@@ -129,6 +129,7 @@ TAG:=$(shell date --date=$(TODAY) +s%Y%m%d)
 
 
 # -------------------------------------
+# .PHONY 建立伪目标
 .PHONY: all ninfod clean distclean man html check-kernel modules snapshot
 
 all: $(TARGETS)
@@ -144,6 +145,12 @@ $(TARGETS): %: %.o
 # $< 依赖目标中的第一个目标名字
 # $@ 表示目标
 # $^ 所有的依赖目标的集合
+# 在$(patsubst %.o,%,$@ )中，patsubst把目标中的变量符合后缀是.o的全部删除
+# LINK.o把.o文件链接在一起的命令行，缺省值是$(CC)
+
+#以ping为例，翻译为：
+# gcc -O3 -fno-strict-aliasing -Wstrict-prototypes -Wall -g -D_GNU_SOURCE    -c ping.c -DCAPABILITIES   -o ping.o
+#gcc   ping.o ping_common.o -lcap    -o ping
 
 # -------------------------------------
 # arping
