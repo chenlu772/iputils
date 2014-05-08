@@ -63,6 +63,8 @@ GLIBCFIX=-D_GNU_SOURCE
 DEFINES=
 LDLIB=
 
+#$符号是makefile中调用变量地意思
+#定义变量调用if函数；如果非空则$(LDFLAG_STATIC) $(2) 否则执行$(LDFLAG_DYNAMIC),$(2)
 FUNC_LIB = $(if $(filter static,$(1)),$(LDFLAG_STATIC) $(2) $(LDFLAG_DYNAMIC),$(2))
 
 # USE_GNUTLS: DEF_GNUTLS, LIB_GNUTLS
@@ -75,6 +77,7 @@ else
 endif
 
 # USE_RESOLV: LIB_RESOLV
+# call 函数是唯一一个可以用来创建新的参数化的函数，参数取代
 LIB_RESOLV = $(call FUNC_LIB,$(USE_RESOLV),$(LDFLAG_RESOLV))
 
 # USE_CAP:  DEF_CAP, LIB_CAP
@@ -121,6 +124,7 @@ TARGETS=$(IPV4_TARGETS) $(IPV6_TARGETS)
 CFLAGS=$(CCOPTOPT) $(CCOPT) $(GLIBCFIX) $(DEFINES)
 LDLIBS=$(LDLIB) $(ADDLIB)
 
+# 用shell函数获取系统信息并作为返回值赋值给定义地变量
 UNAME_N:=$(shell uname -n)
 LASTTAG:=$(shell git describe HEAD | sed -e 's/-.*//')
 TODAY=$(shell date +%Y/%m/%d)
@@ -149,7 +153,8 @@ $(TARGETS): %: %.o
 # $@ 表示目标集
 # $^ 所有的依赖目标的集合
 # 在$(patsubst %.o,%,$@ )中，patsubst把目标中的变量符合后缀是.o的全部删除
-# patsubst 是模式字符串替换函数，patsubst %.o,%,$@ )的意思是：查找$@中的单词(单词以“空格”、“Tab”或“回车”“换行”分隔)是否符合模式“%.o”，如果匹配的话,则以“%”替换
+# patsubst 是模式字符串替换函数，patsubst %.o,%,$@ )的意思是：
+# 查找$@中的单词(单词以“空格”、“Tab”或“回车”“换行”分隔)是否符合模式“%.o”，如果匹配的话,则以“%”替换
 # $(TARGETS): %: %.O 指明我们的目标从$(TARGETS)中获取，“%”表明要以所有文件为目标，也就是$(TARGETS)集合的模式，而依赖模式%.O则取“%”，并为其加“.c”后缀
 # LINK.o把.o文件链接在一起的命令行，缺省值是$(CC)
 
@@ -194,6 +199,8 @@ DEF_rdisc = $(DEF_ENABLE_RDISC_SERVER)
 LIB_rdisc =
 
 # tracepath
+# tracepath命令用来追踪并显示报文到达目的主机所经过的路由信息。
+
 DEF_tracepath = $(DEF_IDN)
 LIB_tracepath = $(LIB_IDN)
 
@@ -202,6 +209,8 @@ DEF_tracepath6 = $(DEF_IDN)
 LIB_tracepath6 =
 
 # traceroute6
+# 
+
 DEF_traceroute6 = $(DEF_CAP) $(DEF_IDN)
 LIB_traceroute6 = $(LIB_CAP) $(LIB_IDN)
 
