@@ -59,6 +59,7 @@ ENABLE_RDISC_SERVER=no
 # -Wstrict-prototypes: 如果函数的声明或定义没有指出参数类型，编译器就发出警告
 CCOPT=-fno-strict-aliasing -Wstrict-prototypes -Wall -g
 CCOPTOPT=-O3
+# 
 GLIBCFIX=-D_GNU_SOURCE
 DEFINES=
 LDLIB=
